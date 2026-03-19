@@ -46,9 +46,7 @@ class AuthControllers
 			$this->smarty->assign('user_info', $user_info);
 		}
 
-		if(!isset($_SESSION['system_config'])){
-			$_SESSION['system_config'] = get_system_config();
-		}
+		$_SESSION['system_config'] = get_system_config();
 		$this->smarty->assign('system_config', $_SESSION['system_config']);
 
 		$this->smarty->assign('menu', $this->menu());

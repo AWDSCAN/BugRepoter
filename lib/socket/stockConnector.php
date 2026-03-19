@@ -1,58 +1,57 @@
 <?php
 class stockConnector
 {
-	  public static $instance=null;
+	  public static $instance = null;
 	  public $conn;
-	  
-	  public function __construct($ip,$port)
+
+	  public function __construct($ip, $port)
 	  {
 		  set_time_limit(0);
-		  if(($this->conn = socket_create(AF_INET,SOCK_STREAM,SOL_TCP)) < 0)
-		  {
-				return "socket_create() 失败的原因是:".socket_strerror($this->conn)."\n";
+		  $errno  = 0;
+		  $errstr = '';
+		  $this->conn = fsockopen($ip, intval($port), $errno, $errstr, 10);
+		  if (!$this->conn) {
+				throw new Exception("fsockopen() 失败: [{$errno}] {$errstr}");
 		  }
-		  $result = @socket_connect($this->conn, $ip, $port);
-		  if (!$result) 
-		  {
-				return "socket_connect() failed.\nReason: ($result) " . socket_strerror($result) . "\n";
-		  }
+		  // 设置读取超时 3 秒
+		  stream_set_timeout($this->conn, 3);
 	  }
-	  
+
 	  public static function getInstance()
 	  {
-			if(is_null(self::$instance))
-			{
-			  	self::$instance = new stockConnector;
+			if (is_null(self::$instance)) {
+				self::$instance = new stockConnector;
 			}
 			return self::$instance;
 	  }
-	  
-	  
+
 	  public function sendMsg($msg)
 	  {
-			socket_write($this->conn,$msg);
+			fwrite($this->conn, $msg);
 	  }
-	  
+
 	  public function getMsg()
 	  {
-			$clients = array($this->conn);
-			while(true)
-			{
-				  $read = $clients;
-				  $wrSet = NULL;
-				  $errSet = NULL;
-				  if(socket_select($read, $wrSet,$errSet, 3) < 1)
-				  {
-					continue;
-				  }
-				  foreach($read as $read_sock)
-				  {
-					$data = @socket_read($read_sock,1024,PHP_BINARY_READ);
-					socket_close($this->conn);
-					return $data;
-				  }
+			$data = '';
+			while (!feof($this->conn)) {
+				$buf = fread($this->conn, 1024);
+				if ($buf === false || $buf === '') {
+					// 超时或无数据
+					break;
+				}
+				$data .= $buf;
+				$info = stream_get_meta_data($this->conn);
+				if ($info['timed_out']) {
+					break;
+				}
+				// 收到完整 JSON 即可退出
+				if (json_decode($data) !== null) {
+					break;
+				}
 			}
+			fclose($this->conn);
+			return $data;
 	  }
-}	
+}
 
 ?>

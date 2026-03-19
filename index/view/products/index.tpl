@@ -34,6 +34,11 @@
                                         <span>导出复测报告</span>
                                     </button>
                                 </a>
+                                <a href="javascript:void(0);" onclick="download_project_export('{$token}')">
+                                    <button class="dt-button buttons-copy buttons-html5" tabindex="0" aria-controls="copy-print-scroll" type="button" style="background:#28a745;border-color:#28a745;color:#fff;">
+                                        <span>按项目导出报告</span>
+                                    </button>
+                                </a>
                                 <style>
                                     .select-type{
                                         line-height: 30px;
@@ -164,6 +169,42 @@
                                 layer.msg(data.msg, {
                                     icon: 2
                                 }, function(){
+                                   window.location.reload();
+                                });
+                            }
+                        },"json");
+                    } else {
+                        layer.msg("请选择导出模板！");
+                    }
+                }
+            });
+        }
+
+        // 按项目导出漏洞报告
+        function download_project_export(token)
+        {
+            var company_id = $("#company_option").find("option:selected").val();
+            if(!company_id){
+                layer.msg('请先在项目下拉框中选择一个项目！', {icon: 2});
+                return;
+            }
+            layer.open({
+                title: '请选择导出模板',
+                btn: ['确定'],
+                content: '<div class="field-wrapper"><div class="field-wrapper"><select class="select-single js-states" title="" data-live-search="true" id="range_project">'+'{$template}'+'</select></div></div>',
+                yes: function (index,layero) {
+                    if($('#range_project').val()){
+                        $.post("{$products_download_by_project_index}",{
+                            company_id: company_id,
+                            token: token,
+                            path: $('#range_project').val(),
+                        },function(data){
+                            if(data.status == '1'){
+                                layer.msg('正在为您下载！', {icon: 1}, function(){
+                                   window.location.href = "."+data.data.url
+                                });
+                            } else {
+                                layer.msg(data.msg, {icon: 2}, function(){
                                    window.location.reload();
                                 });
                             }

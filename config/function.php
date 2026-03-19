@@ -465,7 +465,8 @@ function downloadFile($filePath, $name = "", $readBuffer = 1024, $allowExt = ['d
     if(empty($name)){
       $name = basename($filePath);
     }
-    header('Content-Disposition:attachment;filename=' . $name);//声明作为附件处理和下载后文件的名称
+    // 使用 RFC 5987 编码支持中文文件名
+    header('Content-Disposition:attachment;filename="' . addslashes($name) . '";filename*=UTF-8\'\'' . rawurlencode($name));
     //获取文件内容
     $handle = fopen($filePath, 'rb');//二进制文件用‘rb’模式读取
     while (!feof($handle) ) { //循环到文件末尾 规定每次读取（向浏览器输出为$readBuffer设置的字节数）

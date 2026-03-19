@@ -18,9 +18,6 @@
         <script src="./public/index/js/modernizr.js"></script>
         <script src="./public/index/js/moment.js"></script>
         <script src="./public/layer/layer.js"></script>
-        <script>
-            var watermark_username = "账户：{$session_username}"
-        </script>
         <style>
             table.dataTable td .actions{
                 display: -webkit-inline-box !important;

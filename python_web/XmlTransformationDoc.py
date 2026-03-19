@@ -12,7 +12,7 @@ class XmlTransformationDoc(object):
         tpl = DocxTemplate(self.template_path)
         zong_data = []
         info_text = ""
-        with open(self.path,'r') as load_f:
+        with open(self.path,'r',encoding='utf-8') as load_f:
             info_text = json.load(load_f)
         for a in range(0,len(info_text['alerts'])):
             data = {'name':"2."+str(a + 1)+" "+str(info_text['alerts'][a]['name']),'path':[]}
