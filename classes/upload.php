@@ -18,7 +18,7 @@ class Upload
     protected $allowMime = ['image/jpg', 'image/jpeg', 'image/gif', 'image/wbmp', 'image/png'];
 
     //允许上传的大小
-    protected $maxSize = 5 * 1024 * 1024;
+    protected $maxSize = 50000 * 1024 * 1024;
 
     //是否启用默认的前缀
     protected $isRandName = true;

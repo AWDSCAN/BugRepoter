@@ -101,10 +101,12 @@ class LoginControllers extends AuthControllers
     public function logout()
     {
         $this->log_db("退出登录","2");
+        // 在销毁session之前保存domain_key
+        $domain_key = isset($_SESSION['domain_key']) ? $_SESSION['domain_key'] : '';
         $_SESSION=[];
         setCookie("BQ","",time()-1,"/");
         session_destroy();
-        header_flush("退出登录成功！","/".root_filename.".php?".AuthCode("m=Login&a=index","ENCODE",$_SESSION['domain_key']));
+        header_flush("退出登录成功！","/".root_filename.".php?".AuthCode("m=Login&a=index","ENCODE",$domain_key));
         die;
     }
 }
