@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2026-03-19 20:35:29
+/* Smarty version 3.1.34-dev-7, created on 2026-03-20 11:08:27
   from 'C:\Users\admin\Documents\company\CompanyToolDevelopment\BugRepoter_0x727\index\view\products\add_index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_69bbed91aee7f2_02024141',
+  'unifunc' => 'content_69bcba2b00a632_07268963',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'ff7535c4116e30a9ee3a916bd565a12946befe6d' => 
     array (
       0 => 'C:\\Users\\admin\\Documents\\company\\CompanyToolDevelopment\\BugRepoter_0x727\\index\\view\\products\\add_index.tpl',
-      1 => 1772504845,
+      1 => 1773976001,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../footer.tpl' => 1,
   ),
 ),false)) {
-function content_69bbed91aee7f2_02024141 (Smarty_Internal_Template $_smarty_tpl) {
+function content_69bcba2b00a632_07268963 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:../header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
     <link rel="stylesheet" href="./public/index/vendor/bs-select/bs-select.css" />
@@ -297,6 +297,43 @@ $_smarty_tpl->tpl_vars['foo']->first = $_smarty_tpl->tpl_vars['foo']->iteration 
                         },
                         onPaste: function (ne) {
                             var _clipboardData = (ne.originalEvent || ne).clipboardData || window.clipboardData;
+                            // 优先处理剪贴板中的图片（截图场景）
+                            if (_clipboardData && _clipboardData.items) {
+                                var items = _clipboardData.items;
+                                for (var i = 0; i < items.length; i++) {
+                                    if (items[i].type.indexOf('image') !== -1) {
+                                        // 立即阻止事件的默认行为和传播
+                                        ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
+                                        ne.stopPropagation && ne.stopPropagation();
+                                        ne.stopImmediatePropagation && ne.stopImmediatePropagation();
+                                        var imgFile = items[i].getAsFile();
+                                        var formData = new FormData();
+                                        formData.append('file', imgFile, 'paste.png');
+                                        $.ajax({
+                                            url: '<?php echo $_smarty_tpl->tpl_vars['menu']->value["public_deup_img"];?>
+',
+                                            data: formData,
+                                            cache: false,
+                                            dataType: 'json',
+                                            contentType: false,
+                                            processData: false,
+                                            type: 'POST',
+                                            success: function (data) {
+                                                if (data.status == '1') {
+                                                    $summernote_<?php echo $_smarty_tpl->tpl_vars['foo']->value;?>
+.summernote('insertImage', data.data, function ($image) {
+                                                        $image.attr('src', data.data);
+                                                        $image.removeAttr('style');
+                                                    });
+                                                } else {
+                                                    layer.msg(data.msg, { icon: 2 });
+                                                }
+                                            }
+                                        });
+                                        return;
+                                    }
+                                }
+                            }
                             var bufferHtml = _clipboardData.getData("text/html");
                             var bufferText = _clipboardData.getData("text/plain")
                             ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);

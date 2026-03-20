@@ -111,6 +111,41 @@
                     },
                     onPaste: function (ne) {
                         var _clipboardData = (ne.originalEvent || ne).clipboardData || window.clipboardData;
+                        // 优先处理剪贴板中的图片（截图场景）
+                        if (_clipboardData && _clipboardData.items) {
+                            var items = _clipboardData.items;
+                            for (var i = 0; i < items.length; i++) {
+                                if (items[i].type.indexOf('image') !== -1) {
+                                    // 立即阻止事件的默认行为和传播
+                                    ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
+                                    ne.stopPropagation && ne.stopPropagation();
+                                    ne.stopImmediatePropagation && ne.stopImmediatePropagation();
+                                    var imgFile = items[i].getAsFile();
+                                    var formData = new FormData();
+                                    formData.append('file', imgFile, 'paste.png');
+                                    $.ajax({
+                                        url: '{$menu["public_deup_img"]}',
+                                        data: formData,
+                                        cache: false,
+                                        dataType: 'json',
+                                        contentType: false,
+                                        processData: false,
+                                        type: 'POST',
+                                        success: function (data) {
+                                            if (data.status == '1') {
+                                                $summernote_.summernote('insertImage', data.data, function ($image) {
+                                                    $image.attr('src', data.data);
+                                                    $image.removeAttr('style');
+                                                });
+                                            } else {
+                                                layer.msg(data.msg, { icon: 2 });
+                                            }
+                                        }
+                                    });
+                                    return;
+                                }
+                            }
+                        }
                         var bufferHtml = _clipboardData.getData("text/html");
                         var bufferText = _clipboardData.getData("text/plain")
                         ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);

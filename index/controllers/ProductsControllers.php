@@ -742,7 +742,7 @@ class ProductsControllers extends AuthControllers
 							$name = '共'.count($file_path).'报告'.date("Y-m-d").'.zip';
 							$filename = ROOT_PATH."/python_web/tmp/".$name; //最终生成的文件名
 							if(!is_dir(dirname($filename))){
-							　　mkdir(dirname($filename), 0777, true);
+								mkdir(dirname($filename), 0777, true);
 							}
 							$zip = new \ZipArchive();
 							if($zip->open($filename,\ZIPARCHIVE::CREATE)!==TRUE){
@@ -1051,7 +1051,7 @@ class ProductsControllers extends AuthControllers
 							$name = '共'.count($file_path).'报告'.date("Y-m-d").'.zip';
 							$filename = ROOT_PATH."/python_web/tmp/".$name; //最终生成的文件名
 							if(!is_dir(dirname($filename))){
-							　　mkdir(dirname($filename), 0777, true);
+								mkdir(dirname($filename), 0777, true);
 							}
 							$zip = new \ZipArchive();
 							if($zip->open($filename,\ZIPARCHIVE::CREATE)!==TRUE){
@@ -1237,11 +1237,39 @@ class ProductsControllers extends AuthControllers
 							img_unlik($tmp_img);
 							$this->json(["status"=>0,"msg"=>"系统异常：导出报告服务错误！","data"=>["url"=>"/".root_filename.".php?".AuthCode("m=Products&a=index","ENCODE",$_SESSION['domain_key'])]]);
 						}
-						img_unlik($tmp_img);
-						$file_path = array_shift($file_path);
-						downloadFile($file_path,basename($file_path));
-						$this->log_db("用户成功按项目导出漏洞报告：".filterWords(basename($file_path)),"9");
-						@unlink($file_path);
+
+						// 文件下载 - 支持单文件和多文件ZIP打包
+						if(count($file_path) <= 1){
+							img_unlik($tmp_img);
+							$file_path = array_shift($file_path);
+							downloadFile($file_path,basename($file_path));
+							$this->log_db("用户成功按项目导出漏洞报告：".filterWords(basename($file_path)),"9");
+							@unlink($file_path);
+						} else {
+							$this->log_db("用户成功按项目导出漏洞报告：".filterWords('共'.count($file_path).'报告'.date("Y-m-d").'.zip'),"9");
+							$name = '共'.count($file_path).'报告'.date("Y-m-d").'.zip';
+							$filename = ROOT_PATH."/python_web/tmp/".$name; //最终生成的文件名
+							if(!is_dir(dirname($filename))){
+								mkdir(dirname($filename), 0777, true);
+							}
+							$zip = new \ZipArchive();
+							if($zip->open($filename,\ZIPARCHIVE::CREATE)!==TRUE){
+								img_unlik($tmp_img);
+								$this->json(["status"=>0,"msg"=>"无法打开文件，或者文件创建失败","data"=>["url"=>"/".root_filename.".php?".AuthCode("m=Products&a=index","ENCODE",$_SESSION['domain_key'])]]);
+							}
+							foreach( $file_path as $k=>$v){
+								if(file_exists($v)){
+									$zip->addFile($v,basename($v));
+								}
+							}
+							$zip->close();//关闭
+							img_unlik($tmp_img);
+							foreach( $file_path as $k=>$v){
+								@unlink($v);
+							}
+							downloadFile($filename,basename($filename));
+							@unlink($filename);
+						}
 					} else {
 						$this->json(["status"=>0,"msg"=>"该项目下暂无漏洞！","data"=>["url"=>"/".root_filename.".php?".AuthCode("m=Products&a=index","ENCODE",$_SESSION['domain_key'])]]);
 					}
