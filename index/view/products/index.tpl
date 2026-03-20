@@ -185,7 +185,7 @@
         {
             var company_id = $("#company_option").find("option:selected").val();
             if(!company_id){
-                layer.msg('请先在项目下拉框中选择一个项目！', {icon: 2});
+                layer.msg('请先在项目下拉框中选择一个项目！', { icon: 2});
                 return;
             }
             layer.open({
@@ -200,11 +200,11 @@
                             path: $('#range_project').val(),
                         },function(data){
                             if(data.status == '1'){
-                                layer.msg('正在为您下载！', {icon: 1}, function(){
+                                layer.msg('正在为您下载！', { icon: 1}, function(){
                                    window.location.href = "."+data.data.url
                                 });
                             } else {
-                                layer.msg(data.msg, {icon: 2}, function(){
+                                layer.msg(data.msg, { icon: 2}, function(){
                                    window.location.reload();
                                 });
                             }

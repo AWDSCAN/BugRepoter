@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 header("Conten-type:text/html;charset=utf-8");
 include_once dirname(__FILE__)."/AuthControllers.php";
 class ProductsControllers extends AuthControllers
@@ -610,7 +610,7 @@ class ProductsControllers extends AuthControllers
 						    			if($img){
 							    			$path = ROOT_PATH."/public/auto/".str_replace("m=Public&a=enup_img&id=", "", $img);
 							    			if(file_exists($path)){
-							    				@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path),str_replace("m=Public&a=enup_img&id=", "", $img))[0]);
+							    				@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path),str_replace("m=Public&a=enup_img&id=", "", $img)));
 							    				$tmp_img[] = ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png";
 							    				$array[] = ['text'=>ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",'type'=>1];
 							    			}
@@ -884,7 +884,7 @@ class ProductsControllers extends AuthControllers
 							    			if($img){
 								    			$path = ROOT_PATH."/public/auto/".str_replace("m=Public&a=enup_img&id=", "", $img);
 								    			if(file_exists($path)){
-								    				@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path),str_replace("m=Public&a=enup_img&id=", "", $img))[0]);
+								    				@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path),str_replace("m=Public&a=enup_img&id=", "", $img)));
 								    				$tmp_img[] = ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png";
 								    				$array[] = ['text'=>ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",'type'=>1];
 								    			}
@@ -915,7 +915,7 @@ class ProductsControllers extends AuthControllers
 							    			if($img){
 								    			$path = ROOT_PATH."/public/auto/".str_replace("m=Public&a=enup_img&id=", "", $img);
 								    			if(file_exists($path)){
-								    				@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path),str_replace("m=Public&a=enup_img&id=", "", $img))[0]);
+								    				@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path),str_replace("m=Public&a=enup_img&id=", "", $img)));
 								    				$tmp_img[] = ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png";
 								    				$array[] = ['text'=>ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",'type'=>1];
 								    			}
@@ -1166,7 +1166,7 @@ class ProductsControllers extends AuthControllers
 										if($img){
 											$path_img = ROOT_PATH."/public/auto/".str_replace("m=Public&a=enup_img&id=", "", $img);
 											if(file_exists($path_img)){
-												@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path_img),str_replace("m=Public&a=enup_img&id=", "", $img))[0]);
+												@file_put_contents(ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",@binary_decode(@file_get_contents($path_img),str_replace("m=Public&a=enup_img&id=", "", $img)));
 												$tmp_img[] = ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png";
 												$array[] = ['text'=>ROOT_PATH."/python_web/tmp/".str_replace("m=Public&a=enup_img&id=", "", $img).".png",'type'=>1];
 											}

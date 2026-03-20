@@ -12,16 +12,9 @@ class LoginControllers extends AuthControllers
         if($_POST){
             $name = isset($_POST['name']) ? $_POST['name'] : "";
             $password = isset($_POST['password']) ? $_POST['password'] : "";
-            $verify = isset($_POST['verify']) ? strtolower($_POST['verify']) : "";
             #IF判断区域
             if(empty($name)) $this->json(['status'=>0,'msg'=>'输入账户！']);
             if(empty($password)) $this->json(['status'=>0,'msg'=>'输入密码！']);
-            if(empty($verify)) $this->json(['status'=>0,'msg'=>'输入验证码！']);
-            $session_code = isset($_SESSION['index_code']) ? $_SESSION['index_code'] : '';
-            if(empty($session_code)) $this->json(['status'=>0,'msg'=>'验证码错误！']);
-            if($session_code != $verify) $this->json(['status'=>0,'msg'=>'验证码错误！']);
-            unset($_SESSION['index_code']);
-            
             #IF判断区域
             $db = $this->Db();
             $db->bind("name", $name);
@@ -81,7 +74,6 @@ class LoginControllers extends AuthControllers
                 $this->json(["status"=>0,"msg"=>"登陆失败！"]);
             }
         } else {
-            $this->smarty->assign('verify_img',"./".root_filename.".php?".AuthCode("m=Login&a=code","ENCODE",$_SESSION['domain_key']));
             $this->smarty->assign('ajax_from',"./".root_filename.".php?".AuthCode("m=Login&a=index","ENCODE",$_SESSION['domain_key']));
             $this->smarty->assign('home_index',"./".root_filename.".php?".AuthCode("m=Index&a=index","ENCODE",$_SESSION['domain_key']));
             $this->smarty->display('login/index.tpl');

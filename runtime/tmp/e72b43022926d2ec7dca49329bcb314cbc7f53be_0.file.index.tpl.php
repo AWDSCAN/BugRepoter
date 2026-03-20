@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2026-03-19 20:34:35
+/* Smarty version 3.1.34-dev-7, created on 2026-03-20 08:27:54
   from 'C:\Users\admin\Documents\company\CompanyToolDevelopment\BugRepoter_0x727\index\view\products\index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_69bbed5b811b19_41229855',
+  'unifunc' => 'content_69bc948acbd107_81486779',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'e72b43022926d2ec7dca49329bcb314cbc7f53be' => 
     array (
       0 => 'C:\\Users\\admin\\Documents\\company\\CompanyToolDevelopment\\BugRepoter_0x727\\index\\view\\products\\index.tpl',
-      1 => 1772504845,
+      1 => 1773966437,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../footer.tpl' => 1,
   ),
 ),false)) {
-function content_69bbed5b811b19_41229855 (Smarty_Internal_Template $_smarty_tpl) {
+function content_69bc948acbd107_81486779 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:../header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
     <link rel="stylesheet" href="./public/index/vendor/datatables/dataTables.bs4.css" />
@@ -61,6 +61,12 @@ $_smarty_tpl->_subTemplateRender("file:../header.tpl", $_smarty_tpl->cache_id, $
 ')">
                                     <button class="dt-button buttons-copy buttons-html5" tabindex="0" aria-controls="copy-print-scroll" type="button">
                                         <span>导出复测报告</span>
+                                    </button>
+                                </a>
+                                <a href="javascript:void(0);" onclick="download_project_export('<?php echo $_smarty_tpl->tpl_vars['token']->value;?>
+')">
+                                    <button class="dt-button buttons-copy buttons-html5" tabindex="0" aria-controls="copy-print-scroll" type="button" style="background:#28a745;border-color:#28a745;color:#fff;">
+                                        <span>按项目导出报告</span>
                                     </button>
                                 </a>
                                 <style>
@@ -214,6 +220,44 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
                                 layer.msg(data.msg, {
                                     icon: 2
                                 }, function(){
+                                   window.location.reload();
+                                });
+                            }
+                        },"json");
+                    } else {
+                        layer.msg("请选择导出模板！");
+                    }
+                }
+            });
+        }
+
+        // 按项目导出漏洞报告
+        function download_project_export(token)
+        {
+            var company_id = $("#company_option").find("option:selected").val();
+            if(!company_id){
+                layer.msg('请先在项目下拉框中选择一个项目！', { icon: 2});
+                return;
+            }
+            layer.open({
+                title: '请选择导出模板',
+                btn: ['确定'],
+                content: '<div class="field-wrapper"><div class="field-wrapper"><select class="select-single js-states" title="" data-live-search="true" id="range_project">'+'<?php echo $_smarty_tpl->tpl_vars['template']->value;?>
+'+'</select></div></div>',
+                yes: function (index,layero) {
+                    if($('#range_project').val()){
+                        $.post("<?php echo $_smarty_tpl->tpl_vars['products_download_by_project_index']->value;?>
+",{
+                            company_id: company_id,
+                            token: token,
+                            path: $('#range_project').val(),
+                        },function(data){
+                            if(data.status == '1'){
+                                layer.msg('正在为您下载！', { icon: 1}, function(){
+                                   window.location.href = "."+data.data.url
+                                });
+                            } else {
+                                layer.msg(data.msg, { icon: 2}, function(){
                                    window.location.reload();
                                 });
                             }

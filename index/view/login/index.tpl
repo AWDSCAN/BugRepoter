@@ -21,10 +21,10 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                     <div class="login-about">
                         <div class="slogan">
-                            <span>欢迎登陆0x727自动化编写报告平台</span>
+                            <span>欢迎登陆渗透报告协作平台</span>
                         </div>
                         <div class="about-desc">
-                            Welcome to the 0x727 automated report writing platform to create the troubles and troubles of security service personnel in writing reports. Let me help you。
+                            
                         </div>
 
                     </div>
@@ -46,15 +46,6 @@
                                         <input type="password" name="password">
                                         <div class="field-placeholder">密码</div>
                                     </div>
-                                    <div class="field-wrapper mb-3">
-                                        <div style="position: absolute;right: 0px;">
-                                            <a href="javascript:void(0);">
-                                                <img id="verify_img" src="{$verify_img}" alt="点击刷新" />
-                                            </a>
-                                        </div>
-                                        <input type="text" name="verify" maxlength="4">
-                                        <div class="field-placeholder">验证码</div>
-                                    </div>
                                     <div class="actions">
                                         <button type="button" class="btn btn-primary" id="go_login">登陆</button>
                                     </div>
@@ -75,14 +66,9 @@
         <script src="./public/layer/layer.js"></script>
         <script>
             $(function() {
-                $("#verify_img").click(function() {
-                    var src = "{$verify_img}";
-                    $(this).attr("src", src);
-                });
                 $("#go_login").click(function() {
                     var name = $("input[name='name']").val();
                     var password = $("input[name='password']").val();
-                    var verify = $("input[name='verify']").val();
 
                     if(name==""){
                         layer.msg('用户名不能为空', {
@@ -100,18 +86,9 @@
                         });
                         return false
                     }
-                    if(verify==""){
-                        layer.msg('验证码不能为空', {
-                            icon: 2
-                        }, function(){
-                            
-                        });
-                        return false
-                    }
                     $.post("{$ajax_from}",{
                         name:name,
                         password:password,
-                        verify:verify,
                     },function(data){
                         if(data.status == '1'){
                             layer.msg(data.msg, {
@@ -125,8 +102,6 @@
                             }, function(){
                             });
                         }
-                        $("input[name='verify']").val("");
-                        $("#verify_img").click();
                     },"json");
                 })
             })
