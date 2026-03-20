@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2026-03-19 20:35:42
+/* Smarty version 3.1.34-dev-7, created on 2026-03-20 11:41:35
   from 'C:\Users\admin\Documents\company\CompanyToolDevelopment\BugRepoter_0x727\index\view\products\classification.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_69bbed9ed7e708_15574323',
+  'unifunc' => 'content_69bcc1efa6d763_10973820',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../footer.tpl' => 1,
   ),
 ),false)) {
-function content_69bbed9ed7e708_15574323 (Smarty_Internal_Template $_smarty_tpl) {
+function content_69bcc1efa6d763_10973820 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:../header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
     <link rel="stylesheet" href="./public/index/vendor/datatables/dataTables.bs4.css" />

@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2026-03-19 22:16:15
+/* Smarty version 3.1.34-dev-7, created on 2026-03-20 11:36:38
   from 'C:\Users\admin\Documents\company\CompanyToolDevelopment\BugRepoter_0x727\index\view\header.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_69bc052f717439_05561887',
+  'unifunc' => 'content_69bcc0c63fecb4_44923230',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_69bc052f717439_05561887 (Smarty_Internal_Template $_smarty_tpl) {
+function content_69bcc0c63fecb4_44923230 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!doctype html>
 <html lang="en" style="overflow: hidden;">
     <head>
@@ -217,8 +217,8 @@ function content_69bc052f717439_05561887 (Smarty_Internal_Template $_smarty_tpl)
                                         <span class="avatar">
                                             <img src="<?php ob_start();
 echo $_smarty_tpl->tpl_vars['user_info']->value['img'];
-$_prefixVariable1 = ob_get_clean();
-echo $_prefixVariable1;?>
+$_prefixVariable2 = ob_get_clean();
+echo $_prefixVariable2;?>
 " onerror="javascript:this.src='./public/index/img/user.svg';" alt="User Avatar">
                                             <span class=""></span>
                                         </span>

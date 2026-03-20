@@ -161,15 +161,14 @@ class ProductsControllers extends AuthControllers
 		        $suggestions = isset($v['suggestions']) ? $v['suggestions'] : "";
 		        $db->bind("title", $name);
 	        	$post = $db->find_one("select * from domain_post where title = :title");
-		        if($post) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，漏洞名称已存在！']);
+		        if($post) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，漏洞名称已存在！']);
 
-		        if(empty($name)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，请输入漏洞名称！']);
-		        if(empty($bugDetail)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，请输入漏洞Url！']);
-		        if(empty($cate_id)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，请选择漏洞分类！']);
-		        if(empty($company)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，请选择所属公司！']);
-		        if(empty($description)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，输入漏洞描述！']);
-		        if(empty($suggestions)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，输入修复建议！']);
-		        if(empty($content)) $this->json(['status'=>0,'msg'=>'第'.$k.'份报告，请输入漏洞内容！']);
+		        if(empty($name)) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，请输入漏洞名称！']);
+		        if(empty($cate_id)) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，请选择漏洞分类！']);
+		        if(empty($company)) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，请选择所属公司！']);
+		        if(empty($description)) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，输入漏洞描述！']);
+		        if(empty($suggestions)) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，输入修复建议！']);
+		        if(empty($content)) $this->json(['status'=>0,'msg'=>'第'.($k+1).'份报告，请输入漏洞内容！']);
 	        }
 	        if(empty($session_code)) $this->json(['status'=>2,'msg'=>'token异常！']);
 	        if($session_code != $token) $this->json(['status'=>2,'msg'=>'token验证失败！']);
@@ -257,7 +256,6 @@ class ProductsControllers extends AuthControllers
 	        #IF判断区域
 	      	if(empty($id)) $this->json(['status'=>0,'msg'=>'输入ID！']);
 	        if(empty($name)) $this->json(['status'=>0,'msg'=>'请输入漏洞名称！']);
-	        if(empty($bugDetail)) $this->json(['status'=>0,'msg'=>'请输入漏洞Url！']);
 	        if(empty($cate_id)) $this->json(['status'=>0,'msg'=>'请选择漏洞分类！']);
 	        if(empty($company)) $this->json(['status'=>0,'msg'=>'请选择所属公司！']);
 	        if(empty($description)) $this->json(['status'=>0,'msg'=>'输入漏洞描述！']);
@@ -764,7 +762,8 @@ class ProductsControllers extends AuthControllers
 							img_unlik($tmp_img);
 						}
 					} else {
-	      				$this->json(["status"=>0,"msg"=>"漏洞不存在！","data"=>["url"=>"/".root_filename.".php?".AuthCode("m=Products&a=index","ENCODE",$_SESSION['domain_key'])]]);
+						// 调试信息：显示查询的session ID
+	      				$this->json(["status"=>0,"msg"=>"漏洞不存在！查询的session: ".implode(", ", $id)." | 用户ID: ".$_SESSION['userid'],"data"=>["url"=>"/".root_filename.".php?".AuthCode("m=Products&a=index","ENCODE",$_SESSION['domain_key'])]]);
 					}
 				} else {
 	      			$this->json(["status"=>0,"msg"=>"模板文件不存在！","data"=>["url"=>"/".root_filename.".php?".AuthCode("m=Products&a=index","ENCODE",$_SESSION['domain_key'])]]);

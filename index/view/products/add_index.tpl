@@ -22,10 +22,10 @@
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="field-wrapper">
-                                        <input class="form-control" type="text" name="post[{$foo}][bugDetail]" value="">
-                                        <div class="field-placeholder">漏洞URL <span class="text-danger">*</span></div>
+                                        <textarea class="form-control" name="post[{$foo}][bugDetail]" rows="3" placeholder="请输入目标地址（支持多个，每行一个）"></textarea>
+                                        <div class="field-placeholder">目标地址</div>
                                         <div class="form-text">
-                                            请输入漏洞URL
+                                            可填写多个目标地址，每行一个，例如：http://example.com、192.168.1.1等
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@
             var token = $("input[name='token']").val();
             for (var i=1;i<=num;i++){
                 var name = $("input[name='post["+i+"][name]']").val();
-                var bugDetail = $("input[name='post["+i+"][bugDetail]']").val();
+                var bugDetail = $("textarea[name='post["+i+"][bugDetail]']").val();
                 var company = $("select[name='post["+i+"][company]']").find("option:selected").val();
                 var bugLevel = $("input[name='post["+i+"][bugLevel]']:checked").val();
                 var cate_id = $("select[name='post["+i+"][cate_id]']").find("option:selected").val();
@@ -273,20 +273,6 @@
                 var content = $('#summernote_'+i).summernote('code');
                 if(name==""){
                     layer.msg("第"+i+"份报告，漏洞名称不能为空", {
-                        icon: 2
-                    }, function(){
-                    });
-                    return false
-                }
-                if(bugDetail==""){
-                    layer.msg("第"+i+"份报告，漏洞URL不能为空", {
-                        icon: 2
-                    }, function(){
-                    });
-                    return false
-                }
-                if(!fIsUrL(bugDetail)){
-                    layer.msg("第"+i+"份报告，漏洞URL格式错误", {
                         icon: 2
                     }, function(){
                     });

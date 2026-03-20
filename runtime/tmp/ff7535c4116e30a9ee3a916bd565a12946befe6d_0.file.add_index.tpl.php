@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2026-03-20 11:08:27
+/* Smarty version 3.1.34-dev-7, created on 2026-03-20 11:36:38
   from 'C:\Users\admin\Documents\company\CompanyToolDevelopment\BugRepoter_0x727\index\view\products\add_index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_69bcba2b00a632_07268963',
+  'unifunc' => 'content_69bcc0c63e0076_35183641',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'ff7535c4116e30a9ee3a916bd565a12946befe6d' => 
     array (
       0 => 'C:\\Users\\admin\\Documents\\company\\CompanyToolDevelopment\\BugRepoter_0x727\\index\\view\\products\\add_index.tpl',
-      1 => 1773976001,
+      1 => 1773977789,
       2 => 'file',
     ),
   ),
@@ -22,7 +22,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:../footer.tpl' => 1,
   ),
 ),false)) {
-function content_69bcba2b00a632_07268963 (Smarty_Internal_Template $_smarty_tpl) {
+function content_69bcc0c63e0076_35183641 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:../header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
     <link rel="stylesheet" href="./public/index/vendor/bs-select/bs-select.css" />
@@ -54,11 +54,11 @@ $_smarty_tpl->tpl_vars['foo']->first = $_smarty_tpl->tpl_vars['foo']->iteration 
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="field-wrapper">
-                                        <input class="form-control" type="text" name="post[<?php echo $_smarty_tpl->tpl_vars['foo']->value;?>
-][bugDetail]" value="">
-                                        <div class="field-placeholder">漏洞URL <span class="text-danger">*</span></div>
+                                        <textarea class="form-control" name="post[<?php echo $_smarty_tpl->tpl_vars['foo']->value;?>
+][bugDetail]" rows="3" placeholder="请输入目标地址（支持多个，每行一个）"></textarea>
+                                        <div class="field-placeholder">目标地址</div>
                                         <div class="form-text">
-                                            请输入漏洞URL
+                                            可填写多个目标地址，每行一个，例如：http://example.com、192.168.1.1等
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +369,7 @@ echo $_prefixVariable1;?>
             var token = $("input[name='token']").val();
             for (var i=1;i<=num;i++){
                 var name = $("input[name='post["+i+"][name]']").val();
-                var bugDetail = $("input[name='post["+i+"][bugDetail]']").val();
+                var bugDetail = $("textarea[name='post["+i+"][bugDetail]']").val();
                 var company = $("select[name='post["+i+"][company]']").find("option:selected").val();
                 var bugLevel = $("input[name='post["+i+"][bugLevel]']:checked").val();
                 var cate_id = $("select[name='post["+i+"][cate_id]']").find("option:selected").val();
@@ -378,20 +378,6 @@ echo $_prefixVariable1;?>
                 var content = $('#summernote_'+i).summernote('code');
                 if(name==""){
                     layer.msg("第"+i+"份报告，漏洞名称不能为空", {
-                        icon: 2
-                    }, function(){
-                    });
-                    return false
-                }
-                if(bugDetail==""){
-                    layer.msg("第"+i+"份报告，漏洞URL不能为空", {
-                        icon: 2
-                    }, function(){
-                    });
-                    return false
-                }
-                if(!fIsUrL(bugDetail)){
-                    layer.msg("第"+i+"份报告，漏洞URL格式错误", {
                         icon: 2
                     }, function(){
                     });

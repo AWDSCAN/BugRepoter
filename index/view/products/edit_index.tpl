@@ -21,10 +21,10 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="field-wrapper">
-                                    <input class="form-control" type="text" name="bugDetail" value="{$post.bugDetail}">
-                                    <div class="field-placeholder">漏洞URL <span class="text-danger">*</span></div>
+                                    <textarea class="form-control" name="bugDetail" rows="3" placeholder="请输入目标地址（支持多个，每行一个）">{$post.bugDetail}</textarea>
+                                    <div class="field-placeholder">目标地址</div>
                                     <div class="form-text">
-                                        请输入漏洞URL
+                                        可填写多个目标地址，每行一个，例如：http://example.com、192.168.1.1等
                                     </div>
                                 </div>
                             </div>
@@ -255,7 +255,7 @@
             $("#go_submit").click(function() {
                 var id = $("input[name='id']").val();
                 var name = $("input[name='name']").val();
-                var bugDetail = $("input[name='bugDetail']").val();
+                var bugDetail = $("textarea[name='bugDetail']").val();
                 var company = $("select[name='company']").find("option:selected").val();
                 var bugLevel = $("input[name='bugLevel']:checked").val();
                 var cate_id = $("select[name='cate_id']").find("option:selected").val();
@@ -266,20 +266,6 @@
                 
                 if(name==""){
                     layer.msg("漏洞名称不能为空", {
-                        icon: 2
-                    }, function(){
-                    });
-                    return false
-                }
-                if(bugDetail==""){
-                    layer.msg("漏洞URL不能为空", {
-                        icon: 2
-                    }, function(){
-                    });
-                    return false
-                }
-                if(!fIsUrL(bugDetail)){
-                    layer.msg("漏洞URL格式错误", {
                         icon: 2
                     }, function(){
                     });
