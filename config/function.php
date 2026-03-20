@@ -685,20 +685,42 @@ function header_flush($msg = "",$url = "")
   * @return bool
   */
 function if_onlyoffice(){
-  $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-  socket_set_nonblock($sock);
-  socket_connect($sock,'192.168.5.104', "8000");
-  socket_set_block($sock);
-  $return = @socket_select($r = array($sock), $w = array($sock), $f = array($sock), 3);
-  socket_close($sock);
-  //1 端口已使用
-  //2 端口未使用
-  //0 端口不存在
-  if($return == 1){
+  // 优先使用 fsockopen，兼容性更好，不需要 sockets 扩展
+  $host = '192.168.5.104';
+  $port = 8000;
+  $timeout = 3;
+  
+  // 使用 @ 抑制错误，通过返回值判断连接状态
+  $sock = @fsockopen($host, $port, $errno, $errstr, $timeout);
+  
+  if ($sock) {
+    fclose($sock);
     return true;
-  } else {
-    return false;
   }
+  
+  // 如果 fsockopen 不可用，尝试使用 socket 扩展（如果已启用）
+  if (function_exists('socket_create')) {
+    $sock = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+    if ($sock === false) {
+      return false;
+    }
+    @socket_set_nonblock($sock);
+    @socket_connect($sock, $host, $port);
+    @socket_set_block($sock);
+    
+    // socket_select 需要变量引用，不能直接传递数组字面量
+    $r = array($sock);
+    $w = array($sock);
+    $f = array($sock);
+    $return = @socket_select($r, $w, $f, $timeout);
+    @socket_close($sock);
+    
+    if($return == 1){
+      return true;
+    }
+  }
+  
+  return false;
 }
 
 /**

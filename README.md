@@ -1,4 +1,4 @@
-# 0x727自动化编写报告平台
+# 渗透报告协作平台
 
 [![GitHub release](https://img.shields.io/github/release/0x727/BugRepoter_0x727.svg)](https://github.com/0x727/BugRepoter_0x727/releases)
 
@@ -31,7 +31,7 @@
  注意：以上7个目录和目录下文件，除runtime必须具有可写权限777，其他必须具有可写权限766，非ROOT或管理员组权限！
 
 ### 2 进入安装界面
-现在我们要做的就是安装0x727自动化编写报告平台，在网页地址栏输入框中，输入 http://域名/index.php 后，按回车键，即可进入安装界面，如同：
+现在我们要做的就是安装渗透报告协作平台，在网页地址栏输入框中，输入 http://域名/index.php 后，按回车键，即可进入安装界面，如同：
 注册协议
 
 ![install_one](./public/img/install_one.png)
@@ -214,83 +214,213 @@ cd docker
 
 ![run_docker](./public/img/run_docker.png)
 
-## 0x07 版本更新
+## 0x07 Word报告模板说明
 
-V1.0 项目支持项目批量提交，批量按项目分类进行导出，快速生成并且统计年度汇总报告。
+### 模板引擎
 
-V1.1 防截图功能，避免项目成员私自截图分享到互联网。报告上传的图片采用RC4加密算法进行加密图片，更好的防止图片泄露。
+本系统使用 `python-docx-template` 库来生成Word报告，支持自定义模板上传。
 
-V1.2 URL防止篡改，更好提高网站安全性。防止恶意获取URL请求。
+### 模板存储位置
 
-V1.3 增加项目资产自动归属，增加漏洞分布图。
+- 模板文件存储路径：`/public/docx/{用户UUID}/`
+- 默认模板：`3b2bd38d2e911dc033217dc96cd6675d.docx`
+- 模板数据库表：`domain_template`
 
-V1.4 优化一键安装页面问题。
+### 模板占位符说明
 
-V1.5 增加docker一键部署环境。
+在Word模板中，使用 `{{ 占位符名称 }}` 的格式来定义占位符，系统会自动将数据填充到对应位置。
 
-V1.6 增加复测报告导出，优化一键安装页面问题。
+#### 1. 基本信息字段
 
-V1.7 解决docker环境部署兼容性问题。
+| 占位符 | 说明 | 数据类型 | 示例 |
+|--------|------|---------|------|
+| `{{ name }}` | 项目名称 | 字符串 | "贵州高速渗透测试" |
+| `{{ doctype }}` | 文档类型 | 整数 | 1=安全测试报告, 2=复测报告 |
+| `{{ time }}` | 报告生成日期 | 字符串 | "2026年03月20日" |
+| `{{ producer }}` | 报告生成人 | 字符串 | "admin" |
+| `{{ producer_time }}` | 生成时间 | 字符串 | "2026.03.20" |
+| `{{ reviewer }}` | 审核人 | 字符串 | "张三" |
+| `{{ reviewer_time }}` | 审核时间 | 字符串 | "2026.03.21" |
+| `{{ url }}` | 目标URL | 字符串 | "*.101.45" |
 
-V1.8 优化登陆防护，判断用户输入错误多次并且锁定账户。
+#### 2. 统计数据字段
+
+| 占位符 | 说明 | 数据类型 | 示例 |
+|--------|------|---------|------|
+| `{{ common }}` | 漏洞总数 | 整数 | 15 |
+| `{{ serious }}` | 严重漏洞数量 | 整数 | 2 |
+| `{{ high }}` | 高危漏洞数量 | 整数 | 5 |
+| `{{ medium }}` | 中危漏洞数量 | 整数 | 6 |
+| `{{ low }}` | 低危漏洞数量 | 整数 | 2 |
+| `{{ risk_level }}` | 风险等级评估 | 字符串 | "一般隐患" |
+| `{{ vulnerability_types }}` | 漏洞类型汇总 | 字符串 | "SQL注入,XSS" |
+
+#### 3. 主机列表 (hostlist)
+
+主机列表是一个数组，可以使用循环语法遍历：
 
 ```
-增加domain_member字段
-ALTER TABLE `domain_member`
-ADD COLUMN `error_num`  int(11) NULL DEFAULT 0 AFTER `img`,
-ADD COLUMN `error_time`  int(11) NULL DEFAULT 0 AFTER `error_num`;
+{% for host in hostlist %}
+{{ host.id }}       # 主机ID
+{{ host.url }}      # 主机URL
+{{ host.name }}     # 漏洞名称
+{{ host.type }}     # 漏洞类型
+{{ host.bugLevel }} # 漏洞等级 (1=低危, 2=中危, 3=高危, 4=严重)
+{% endfor %}
 ```
 
-V1.9 优化一键安装页面，解决docker中的php运行报错问题。
+#### 4. 漏洞详情列表 (alerts)
 
-V1.10 优化已知问题。
+漏洞详情是嵌套的数组结构，包含多个漏洞和每个漏洞的多个路径：
 
-V1.11 增加自定义模板上传。
+```
+{% for alert in alerts %}
+{{ alert.name }}    # 漏洞分类名称
 
-V1.12 解决打开onlyoffice提示令牌问题，增加后台开启debug模式，开启URL加密模式。
+  {% for item in alert.path %}
+  {{ item.pathname }}     # 漏洞编号和名称 (如: 2.1.1 SQL注入)
+  {{ item.id }}           # 漏洞ID
+  {{ item.name }}         # 漏洞名称
+  {{ item.level }}        # 漏洞等级 (1=低危, 2=中危, 3=高危, 4=严重)
+  {{ item.url }}          # 漏洞URL
+  {{ item.analysis }}     # 漏洞分析描述
+  {{ item.suggestions }}  # 修复建议
+  {{ item.repair_time }}  # 建议修复时间 (天)
+  
+    {% for verify in item.verification %}
+    # verification可以是文本或图片
+    # 文本类型: 直接输出
+    # 图片类型: 自动插入图片 (宽度160mm)
+    {{ verify }}
+    {% endfor %}
+    
+  {% endfor %}
+  
+{% endfor %}
+```
 
-V1.13 优化一键安装页面。
+#### 5. 图片插入说明
 
-V1.14 docker全局访问改成私有访问。
+系统会自动处理漏洞验证截图：
+- 图片类型的 `verification` 项会自动转换为内联图片
+- 图片宽度固定为 160mm
+- 支持的图片格式：PNG, JPG, JPEG
 
-V1.15 解决onlyoffice打开文档错误。
+#### 6. 模板示例
 
-V1.16 解决onlyoffice打开白屏问题。
+```docx
+安全测试报告
 
-## 0x08 待添加/优化功能
+项目名称：{{ name }}
+测试时间：{{ time }}
+目标范围：{{ url }}
 
-V1.1 增加github对比并自动更新。
+一、漏洞统计
+总计发现 {{ common }} 个安全漏洞，其中：
+- 严重: {{ serious }} 个
+- 高危: {{ high }} 个
+- 中危: {{ medium }} 个
+- 低危: {{ low }} 个
 
-V1.2 增加邮件提醒功能，漏洞报告提交超过5天后自动提醒提交者是否修复漏洞。
+风险评估：{{ risk_level }}
 
-V1.3 增加报告分享外链方式进行分享，无需登录即可查看报告内容。
+二、漏洞详情
 
-~~V1.4增加防漏扫功能，避免Awvs，Nessus等一些开源软件进行漏洞扫描。~~(功能在V1.2已支持。)
+{% for alert in alerts %}
+{{ alert.name }}
 
-V1.5 增加认证访问链，自动形成整条认证访问链，行为操作链。
+{% for item in alert.path %}
+{{ item.pathname }}
 
-V1.6 优化post提交内容，进行RSA加密进行提交到后端。
+漏洞URL: {{ item.url }}
+风险等级: {% if item.level == 4 %}严重{% elif item.level == 3 %}高危{% elif item.level == 2 %}中危{% else %}低危{% endif %}
 
-V1.7 优化页面弹出消息提示层。
+漏洞描述：
+{{ item.analysis }}
 
-V1.8 增加附件管理，方便团队协作共享文档，文件等。
+漏洞验证：
+{% for verify in item.verification %}
+{{ verify }}
+{% endfor %}
 
-V1.9 增加数据库备份，方便数据迁移。
+修复建议：
+{{ item.suggestions }}
 
-## 0x09 反馈
+建议修复时间：{{ item.repair_time }} 天
 
-BugRepoter_0x727（自动化编写报告平台） 是一个免费且开源的项目，我们欢迎任何人为其开发和进步贡献力量。
+{% endfor %}
+{% endfor %}
 
-* 在使用过程中出现任何问题，可以通过 issues 来反馈。
-* Bug 的修复可以直接提交 Pull Request 到 dev 分支。
-* 如果是增加新的功能特性，请先创建一个 issue 并做简单描述以及大致的实现方法，提议被采纳后，就可以创建一个实现新特性的 Pull Request。
-* 欢迎对说明文档做出改善，帮助更多的人使用 自动化编写报告平台。
-* 贡献代码请提交 PR 至 dev 分支，master 分支仅用于发布稳定可用版本。
+三、漏洞列表汇总
 
-*提醒：和项目相关的问题最好在 issues 中反馈，这样方便其他有类似问题的人可以快速查找解决方法，并且也避免了我们重复回答一些问题。*
+| 序号 | 漏洞名称 | URL | 等级 |
+|------|---------|-----|------|
+{% for host in hostlist %}
+| {{ host.id }} | {{ host.name }} | {{ host.url }} | {{ host.bugLevel }} |
+{% endfor %}
+```
 
-## Stargazers over time
+### 模板管理操作（简化版本）
 
-[![Stargazers over time](https://starchart.cc/0x727/BugRepoter_0x727.svg)](https://starchart.cc/0x727/BugRepoter_0x727)
+**v1.13 版本起，模板管理已简化，无需配置ONLYOFFICE即可使用**
 
-<img align='right' src="https://profile-counter.glitch.me/BugRepoter_0x727/count.svg" width="200">
+#### 基本操作流程
+
+1. **上传模板**
+   - 进入"模板列表"，点击"添加"按钮
+   - 输入模板名称，上传 .docx 格式的模板文件
+   - 系统会自动保存模板
+
+2. **查看模板详情**
+   - 点击模板列表中的"查看详情"（眼睛图标）
+   - 可查看模板信息和完整的占位符使用说明
+   - 复制占位符代码用于编辑模板
+
+3. **编辑/替换模板**
+   - 方式一（推荐）：
+     - 点击"下载模板"获取当前模板文件
+     - 使用本地Word编辑模板内容
+     - 点击"替换模板"上传更新后的文件
+   - 方式二：
+     - 下载默认模板作为参考
+     - 创建新模板并使用占位符
+     - 点击"添加"上传新模板
+
+4. **删除模板**
+   - 点击"删除"图标
+   - 注意：默认模板（ID=1）不可删除
+
+5. **应用模板**
+   - 在导出报告时选择对应的模板
+   - 系统自动使用选定模板生成报告
+
+#### 模板编辑最佳实践
+
+1. **使用Microsoft Word**
+   - 建议使用Word 2016或更高版本
+   - 确保保存为 `.docx` 格式（不要用 `.doc`）
+
+2. **占位符格式**
+   ```
+   简单字段：{{ field_name }}
+   循环数据：{% for item in list %} ... {% endfor %}
+   条件判断：{% if condition %} ... {% endif %}
+   ```
+
+3. **调试技巧**
+   - 先在小范围测试占位符
+   - 检查占位符拼写是否正确
+   - 确保循环标签成对出现
+
+4. **版本控制**
+   - 建议为模板版本命名（如：安全测试报告模板v2.0）
+   - 保留旧版本模板文件作为备份
+
+### 注意事项
+
+1. 模板文件必须是 `.docx` 格式（Word 2007+）
+2. 自定义模板时请保持占位符名称与系统定义一致
+3. 默认模板（ID=1）不可删除
+4. 模板数据通过Python Socket服务（端口5671）进行处理
+5. 图片文件会临时存储在 `/python_web/tmp/` 目录，生成报告后自动清理
+6. **不再需要配置ONLYOFFICE服务**，简化了部署复杂度

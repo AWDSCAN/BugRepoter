@@ -73,7 +73,8 @@
                         text = ""
                         text += '<div class="actions">'
                         text += '<a href="'+row.download_template_id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="下载模板"><i class="icon-download1 text-info"></i>&nbsp;</a>'
-                        text += '<a href="'+row.edit_template_id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="编辑"><i class="icon-edit1 text-info"></i>&nbsp;</a>'
+                        text += '<a href="'+row.view_template_id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="查看详情"><i class="icon-eye text-success"></i>&nbsp;</a>'
+                        text += '<a href="'+row.edit_template_id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="替换模板"><i class="icon-upload text-warning"></i>&nbsp;</a>'
                         text += '<a href="'+row.del_template_id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="删除"><i class="icon-x-circle text-danger"></i>&nbsp;</a>'
                         text += '</div>'
                         return text

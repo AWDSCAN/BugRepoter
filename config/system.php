@@ -1,5 +1,5 @@
 <?php return [
-'name'=>'0x727自动化编写报告平台',
+'name'=>'渗透报告协作平台',
 'legitimate_ip'=>[],
 'legitimate_type'=>'0',
 'domain_key'=>'e2649f8992758bcd5a75f0d8b3f05818',
